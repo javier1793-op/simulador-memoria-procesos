@@ -1,0 +1,4 @@
+# Normaliza los finales de línea para que no aparezcan cambios "fantasma" entre PCs distintas.
+* text=auto
+*.bat text eol=crlf
+*.pdf binary
