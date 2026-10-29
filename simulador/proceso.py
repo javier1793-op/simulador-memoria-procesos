@@ -59,7 +59,7 @@ class Proceso:
         tr = self.tiempo_retorno
         if tr is None:
             return None 
-        return tr - self.irripcion
+        return tr - self.irrupcion
 
     def __repr__(self):
         return f'P{self.id}({self.estado.value}, restante={self.restante})'
