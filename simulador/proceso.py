@@ -39,23 +39,27 @@ class Proceso:
         self.fin = None               # instante en que terminó
 
     def cambiar_estado(self, nuevo: Estado) -> None:
-        """Cambia el estado del proceso.
-
-        TODO M2: lanzar ValueError si la transición no está en TRANSICIONES
-                 (ej: Nuevo -> Ejecución debe fallar). Mensaje sugerido:
-                 f'Proceso {self.id}: transición inválida {actual} -> {nuevo}'
-        """
+        """Cambia el estado del proceso."""
+        if nuevo not in TRANSICIONES[self.estado]:
+            raise ValueError(f'Proceso {self.id}: transición inválida {self.estado} -> {nuevo}')
+        
         self.estado = nuevo
 
     @property
     def tiempo_retorno(self):
-        """TODO M2: TR = fin - arribo. Devolver None si todavía no terminó."""
-        raise NotImplementedError('TODO M2: tiempo_retorno')
-
+        """TR = fin - arribo. Devolver None si todavía no terminó."""
+        if self.fin is None:
+            return None
+        return self.fin - self.arribo
+        
+    
     @property
     def tiempo_espera(self):
-        """TODO M2: TE = TR - irrupcion. Devolver None si todavía no terminó."""
-        raise NotImplementedError('TODO M2: tiempo_espera')
+        """ TE = TR - irrupcion. Devolver None si todavía no terminó."""
+        tr = self.tiempo_retorno
+        if tr is None:
+            return None 
+        return tr - self.irripcion
 
     def __repr__(self):
         return f'P{self.id}({self.estado.value}, restante={self.restante})'
