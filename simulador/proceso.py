@@ -41,8 +41,8 @@ class Proceso:
     def cambiar_estado(self, nuevo: Estado) -> None:
         """Cambia el estado del proceso."""
         if nuevo not in TRANSICIONES[self.estado]:
-            raise ValueError(f'Proceso {self.id}: transición inválida {self.estado} -> {nuevo}')
-        
+            raise ValueError(f'Proceso {self.id}: transición inválida {self.estado.value} -> {nuevo.value}')
+
         self.estado = nuevo
 
     @property
@@ -51,14 +51,13 @@ class Proceso:
         if self.fin is None:
             return None
         return self.fin - self.arribo
-        
-    
+
     @property
     def tiempo_espera(self):
-        """ TE = TR - irrupcion. Devolver None si todavía no terminó."""
+        """TE = TR - irrupcion. Devolver None si todavía no terminó."""
         tr = self.tiempo_retorno
         if tr is None:
-            return None 
+            return None
         return tr - self.irrupcion
 
     def __repr__(self):
