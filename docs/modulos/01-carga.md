@@ -29,7 +29,23 @@ id,tamano,arribo,irrupcion
 | irrupción ≥ 1 | Un proceso sin tiempo de CPU no tiene sentido |
 
 ## Cómo lo implementé
-> *(completar al terminar: decisiones, problemas que aparecieron y cómo se resolvieron)*
+- `parsear_csv` usa `splitlines()` para admitir finales de línea de Windows, ignora líneas vacías y quita espacios. La primera línea no vacía se toma como encabezado. Cada fila debe tener cuatro columnas convertibles a enteros; ante un error de formato se lanza `ErrorCarga` con el número de línea física.
+- `validar_procesos` recibe los diccionarios parseados y acumula los errores de cantidad, IDs, tamaño, arribo e irrupción. Una lista vacía genera `No se ingresaron procesos.`. Los errores de formato del parseo detienen la carga en la primera fila incorrecta; la acumulación corresponde a la validación posterior.
+- `cargar_archivo` lee UTF-8, parsea y valida antes de crear objetos `Proceso`. Si hay errores de validación, los une con saltos de línea y lanza `ErrorCarga`; `main.py` muestra ese mensaje y termina con código 1. Una carga inválida no se convierte en una lista vacía.
+- `carga_manual` vuelve a pedir cada dato inválido y asigna IDs secuenciales desde 1. No implementa el guardado opcional a CSV.
+
+### Verificación del 1 de noviembre de 2026
+
+- Pasaron los 11 tests de M1 con `py -m unittest tests.test_carga -v`, incluido el reintento en la carga manual y la carga del CSV de ejemplo.
+- Se ejecutaron ambos CSV con `main.py`: `error-tamano.csv` mostró los tres errores de tamaño y `error-varios.csv` los siete errores esperados. Ambos terminaron con código 1.
+- El mensaje anterior `No se ingresaron procesos.` no se reprodujo con los archivos actuales. Ese mensaje se genera cuando la lista a validar está vacía (por ejemplo, CSV vacío o con solo encabezado). No se pudo determinar qué contenido o versión se ejecutó anteriormente; no se modificó el código para este diagnóstico.
+- La suite completa ejecutó 53 tests: 13 pasaron, 3 fallaron y 37 dieron error. Hay implementaciones pendientes en los otros módulos; esto impide dar por verificada la simulación completa. La revisión por otro integrante sigue pendiente.
+
+### Revisión contra la guía del grupo
+
+Se agregó la comprobación explícita de tipos enteros en `validar_procesos`: antes, un decimal dentro del rango podía aceptarse y un texto podía provocar `TypeError`. Ahora se rechazan también booleanos y campos ausentes, acumulando los errores sin interrumpir la validación. No se modificaron firmas ni formatos de retorno.
+
+Pasaron los 13 tests de M1 (los 11 originales y dos nuevos que cubren tipos inválidos y los límites de 10 procesos, tamaño de 1 y 450K, arribo 0 e irrupción 1).
 
 ## Para exponer (1-2 min)
 1. Mostrar el CSV de ejemplo y explicar cada columna.
