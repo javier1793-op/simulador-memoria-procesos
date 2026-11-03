@@ -11,7 +11,7 @@ echo === 1/2 PyInstaller ===
 python -m PyInstaller --onefile --console --name simulador --clean main.py || goto :error
 
 echo === 2/2 Inno Setup ===
-"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" instalador\simulador.iss || goto :error
+"%ProgramFiles%\Inno Setup 7\ISCC.exe" instalador\simulador.iss || goto :error
 
 echo.
 echo Listo: instalador\salida\SimuladorSetup.exe
