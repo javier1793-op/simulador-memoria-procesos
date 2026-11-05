@@ -15,6 +15,14 @@ class ErrorCarga(ValueError):
 
 
 def parsear_csv(texto: str) -> list[dict]:
+    """Convierte el texto de un CSV en una lista de dicts {id, tamano, arribo, irrupcion}.
+
+    - La primera línea es el encabezado y se saltea.
+    - Ignorar líneas vacías y espacios alrededor de cada valor.
+    - Convertir cada valor a int.
+    - Si una línea no tiene 4 columnas o un valor no es un número entero,
+      lanzar ErrorCarga indicando el NÚMERO DE LÍNEA.
+    """
     lineas = texto.splitlines()
     if not lineas:
         return []
@@ -56,6 +64,16 @@ def parsear_csv(texto: str) -> list[dict]:
 
 
 def validar_procesos(lista: list[dict]) -> list[str]:
+    """Valida los datos ANTES de simular. Devuelve la lista de errores (vacía = todo ok).
+
+    Reglas:
+      - entre 1 y MAX_PROCESOS procesos
+      - id positivo y no repetido
+      - tamano entre 1 y MEMORIA_USUARIO (uno más grande nunca entraría y la simulación no terminaría)
+      - arribo >= 0
+      - irrupcion >= 1
+    No corta en el primer error: junta TODOS para mostrarle al usuario qué corregir.
+    """
     errores = []
 
     if not lista:
@@ -108,13 +126,16 @@ def validar_procesos(lista: list[dict]) -> list[str]:
     return errores
 
 
-def cargar_archivo(ruta_archivo: str) -> list[Proceso]:
-    """Lee, parsea, valida y devuelve Proceso[]."""
+def cargar_archivo(ruta: str) -> list[Proceso]:
+    """Lee el archivo (encoding utf-8), lo parsea, lo valida y devuelve objetos Proceso.
+
+    Si hay errores de validación, lanzar ErrorCarga con todos los mensajes (uno por línea).
+    """
     try:
-        with open(ruta_archivo, "r", encoding="utf-8") as f:
+        with open(ruta, "r", encoding="utf-8") as f:
             contenido = f.read()
     except FileNotFoundError:
-        raise ErrorCarga(f"No se encontró el archivo: {ruta_archivo}")
+        raise ErrorCarga(f"No se encontró el archivo: {ruta}")
     except Exception as e:
         raise ErrorCarga(f"Error al leer el archivo: {e}")
 
@@ -139,12 +160,18 @@ def cargar_archivo(ruta_archivo: str) -> list[Proceso]:
 
 
 def carga_manual(entrada=input) -> list[Proceso]:
-    """Pide los datos por teclado (re-preguntando si un dato es inválido)."""
+    """Pide por teclado la cantidad de procesos y, para cada uno, EN ESTE ORDEN: tamaño, arribo
+    e irrupción (el id se asigna automático 1..n). Si un dato es inválido, se vuelve a preguntar
+    ESE dato (ej: tamaño 999 o "abc" -> se pide el tamaño de nuevo).
+
+    `entrada` es la función que lee del teclado (por defecto input); en los tests se reemplaza.
+    Opcional: al final ofrecer guardar lo cargado como CSV en datos/.
+    """
     print("\n--- Carga Manual de Procesos ---")
 
     while True:
         try:
-            cant = int(entrada("¿Cuántos procesos desea cargar? (1 a 10): ").strip())
+            cant = int(entrada(f"¿Cuántos procesos desea cargar? (1 a {MAX_PROCESOS}): ").strip())
             if 1 <= cant <= MAX_PROCESOS:
                 break
             print(f"Error: la cantidad debe estar entre 1 y {MAX_PROCESOS}.")

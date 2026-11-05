@@ -34,18 +34,9 @@ id,tamano,arribo,irrupcion
 - `cargar_archivo` lee UTF-8, parsea y valida antes de crear objetos `Proceso`. Si hay errores de validación, los une con saltos de línea y lanza `ErrorCarga`; `main.py` muestra ese mensaje y termina con código 1. Una carga inválida no se convierte en una lista vacía.
 - `carga_manual` vuelve a pedir cada dato inválido y asigna IDs secuenciales desde 1. No implementa el guardado opcional a CSV.
 
-### Verificación del 1 de noviembre de 2026
+- `validar_procesos` comprueba que cada dato sea realmente un entero: un decimal, un texto, un booleano o un campo ausente se informan como error, sin cortar la validación.
 
-- Pasaron los 11 tests de M1 con `py -m unittest tests.test_carga -v`, incluido el reintento en la carga manual y la carga del CSV de ejemplo.
-- Se ejecutaron ambos CSV con `main.py`: `error-tamano.csv` mostró los tres errores de tamaño y `error-varios.csv` los siete errores esperados. Ambos terminaron con código 1.
-- El mensaje anterior `No se ingresaron procesos.` no se reprodujo con los archivos actuales. Ese mensaje se genera cuando la lista a validar está vacía (por ejemplo, CSV vacío o con solo encabezado). No se pudo determinar qué contenido o versión se ejecutó anteriormente; no se modificó el código para este diagnóstico.
-- La suite completa ejecutó 53 tests: 13 pasaron, 3 fallaron y 37 dieron error. Hay implementaciones pendientes en los otros módulos; esto impide dar por verificada la simulación completa. La revisión por otro integrante sigue pendiente.
-
-### Revisión contra la guía del grupo
-
-Se agregó la comprobación explícita de tipos enteros en `validar_procesos`: antes, un decimal dentro del rango podía aceptarse y un texto podía provocar `TypeError`. Ahora se rechazan también booleanos y campos ausentes, acumulando los errores sin interrumpir la validación. No se modificaron firmas ni formatos de retorno.
-
-Pasaron los 13 tests de M1 (los 11 originales y dos nuevos que cubren tipos inválidos y los límites de 10 procesos, tamaño de 1 y 450K, arribo 0 e irrupción 1).
+**Verificación:** pasan los 13 tests de M1 (los 11 originales y 2 nuevos, sobre tipos inválidos y valores límite). Los archivos `datos/error-tamano.csv` y `datos/error-varios.csv` muestran los mensajes de error en la demo.
 
 ## Para exponer (1-2 min)
 1. Mostrar el CSV de ejemplo y explicar cada columna.
