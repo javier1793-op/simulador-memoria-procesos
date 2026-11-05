@@ -16,13 +16,16 @@ class ResultadoPlanificacion(NamedTuple):
 def clave_srtf(p: Proceso) -> tuple:
     """Clave de orden SRTF para sorted()/min(): menor restante;
     empate -> menor arribo; empate -> menor id."""
-    raise NotImplementedError('TODO M4: clave_srtf')
+    return (p.restante, p.arribo, p.id)
 
 
 def elegir_siguiente(procesos: list[Proceso]) -> Proceso | None:
     """Devuelve el Listo que debería ejecutar (sin modificar nada), o None si no hay Listos.
     `procesos` son TODOS los procesos: filtrar por estado Listo."""
-    raise NotImplementedError('TODO M4: elegir_siguiente')
+    listos = [p for p in procesos if p.estado == Estado.LISTO]
+    if not listos:
+        return None
+    return min(listos, key=clave_srtf)
 
 
 def planificar(procesos: list[Proceso]) -> ResultadoPlanificacion:
@@ -31,7 +34,22 @@ def planificar(procesos: list[Proceso]) -> ResultadoPlanificacion:
       - si hay alguien en Ejecución y un Listo tiene restante ESTRICTAMENTE menor:
           el que ejecutaba -> Listo (conserva su partición), el elegido -> Ejecución
     """
-    raise NotImplementedError('TODO M4: planificar')
+    en_ejecucion_actual = next((p for p in procesos if p.estado == Estado.EJECUCION), None)
+    siguiente = elegir_siguiente(procesos)
+
+    if en_ejecucion_actual is None:
+        if siguiente is not None:
+            siguiente.estado = Estado.EJECUCION
+            return ResultadoPlanificacion(en_ejecucion=siguiente, desalojado=None)
+        return ResultadoPlanificacion(en_ejecucion=None, desalojado=None)
+    else:
+        # Verificar apropiación estricta
+        if siguiente is not None and siguiente.restante < en_ejecucion_actual.restante:
+            en_ejecucion_actual.estado = Estado.LISTO
+            siguiente.estado = Estado.EJECUCION
+            return ResultadoPlanificacion(en_ejecucion=siguiente, desalojado=en_ejecucion_actual)
+        else:
+            return ResultadoPlanificacion(en_ejecucion=en_ejecucion_actual, desalojado=None)
 
 
 class Tramo(NamedTuple):
@@ -48,14 +66,48 @@ class Gantt:
         self.ticks: list[int | None] = []   # ticks[t] = id que ejecutó en [t, t+1), None si ociosa
 
     def registrar(self, t: int, proceso_id: int | None) -> None:
-        raise NotImplementedError('TODO M4: registrar')
+        while len(self.ticks) < t:
+            self.ticks.append(None)
+        self.ticks.append(proceso_id)
 
     def tramos(self) -> list[Tramo]:
         """Agrupa ticks consecutivos del mismo proceso.
         Ej: ticks [1, 2, 2, None, 1] ->
             [Tramo(0, 1, 1), Tramo(1, 3, 2), Tramo(3, 4, None), Tramo(4, 5, 1)]"""
-        raise NotImplementedError('TODO M4: tramos')
+        if not self.ticks:
+            return []
+
+        resultado = []
+        inicio = 0
+        actual = self.ticks[0]
+
+        for i in range(1, len(self.ticks)):
+            if self.ticks[i] != actual:
+                resultado.append(Tramo(desde=inicio, hasta=i, proceso_id=actual))
+                inicio = i
+                actual = self.ticks[i]
+        
+        resultado.append(Tramo(desde=inicio, hasta=len(self.ticks), proceso_id=actual))
+        return resultado
 
     def a_texto(self) -> str:
         """Texto tipo:  | P1 | P2 | P2 | -- | P1 |  con la escala de tiempos abajo."""
-        raise NotImplementedError('TODO M4: a_texto')
+        tramos_lista = self.tramos()
+        if not tramos_lista:
+            return ""
+
+        bloques = []
+        tiempos = [0]
+        
+        for tramo in tramos_lista:
+            nombre = f"P{tramo.proceso_id}" if tramo.proceso_id is not None else "--"
+            bloques.append(nombre)
+            tiempos.append(tramo.hasta)
+
+        fila_bloques = " | " + " | ".join(bloques) + " |"
+        
+        fila_tiempos = ""
+        for t in tiempos:
+            fila_tiempos += f"{t:<5}"
+
+        return f"{fila_bloques}\n{fila_tiempos}"
