@@ -21,10 +21,17 @@ python -m unittest discover -s tests -v
 
 Sin archivo (`python main.py`), se cargan los procesos a mano por teclado.
 
+Versión con ventana (estilo oscuro, Tkinter):
+
+```bash
+python app.py
+```
+
 ## Estructura
 
 ```
 main.py                     entrada por consola                          (M6)
+app.py                      entrada con ventana (usa el mismo motor)
 simulador/
   config.py                 parámetros de la consigna (no hardcodear números)
   carga.py                  leer CSV, validar, carga manual               (M1)
@@ -34,6 +41,7 @@ simulador/
   admision.py               largo y mediano plazo, límite de 5            (M5)
   motor.py                  reloj y ciclo de simulación                   (M6)
   estadisticas.py, salida.py  informe y pantallas                         (M7)
+  interfaz.py               ventana gráfica con Tkinter (sin lógica de simulación)
 tests/                      un archivo de tests por módulo
 datos/                      archivos CSV de prueba
 instalador/                 construir.bat + script de Inno Setup          (M7)
