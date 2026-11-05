@@ -8,7 +8,9 @@ REM Requisitos SOLO en la PC que construye:  pip install pyinstaller   +   Inno 
 cd /d "%~dp0.."
 
 echo === 1/2 PyInstaller ===
-python -m PyInstaller --onefile --console --name simulador --clean main.py || goto :error
+REM Version con ventana (la principal) y version de consola
+python -m PyInstaller --onefile --windowed --name simulador --clean app.py || goto :error
+python -m PyInstaller --onefile --console --name simulador-consola --clean main.py || goto :error
 
 echo === 2/2 Inno Setup ===
 REM Busca Inno Setup 7 o 6, en la carpeta donde lo haya instalado cada uno

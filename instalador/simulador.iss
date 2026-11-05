@@ -23,16 +23,18 @@ Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Files]
 Source: "..\dist\simulador.exe"; DestDir: "{app}"
+Source: "..\dist\simulador-consola.exe"; DestDir: "{app}"
 Source: "..\datos\*.csv"; DestDir: "{app}\datos"
 Source: "..\HOWTO.md"; DestDir: "{app}"; Flags: isreadme
 
 [Icons]
-; Acceso directo que abre el simulador con el archivo de ejemplo
-Name: "{group}\Simulador (ejemplo)"; Filename: "{app}\simulador.exe"; Parameters: """{app}\datos\procesos-ejemplo.csv"""; WorkingDir: "{app}"
-; Acceso directo con carga manual de procesos
-Name: "{group}\Simulador (carga manual)"; Filename: "{app}\simulador.exe"; WorkingDir: "{app}"
+; Version con ventana: abre el ejemplo y tiene botones para abrir otro CSV o cargar a mano
+Name: "{group}\Simulador"; Filename: "{app}\simulador.exe"; WorkingDir: "{app}"
+; Version de consola (texto), con el ejemplo o con carga manual por teclado
+Name: "{group}\Simulador en consola (ejemplo)"; Filename: "{app}\simulador-consola.exe"; Parameters: """{app}\datos\procesos-ejemplo.csv"""; WorkingDir: "{app}"
+Name: "{group}\Simulador en consola (carga manual)"; Filename: "{app}\simulador-consola.exe"; WorkingDir: "{app}"
 Name: "{group}\Desinstalar"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\Simulador SO"; Filename: "{app}\simulador.exe"; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\simulador.exe"; Parameters: """{app}\datos\procesos-ejemplo.csv"""; Description: "Ejecutar el simulador con el ejemplo"; Flags: postinstall nowait skipifsilent
+Filename: "{app}\simulador.exe"; Description: "Ejecutar el simulador con el ejemplo"; Flags: postinstall nowait skipifsilent
