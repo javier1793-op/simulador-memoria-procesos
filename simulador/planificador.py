@@ -39,14 +39,14 @@ def planificar(procesos: list[Proceso]) -> ResultadoPlanificacion:
 
     if en_ejecucion_actual is None:
         if siguiente is not None:
-            siguiente.estado = Estado.EJECUCION
+            siguiente.cambiar_estado(Estado.EJECUCION)
             return ResultadoPlanificacion(en_ejecucion=siguiente, desalojado=None)
         return ResultadoPlanificacion(en_ejecucion=None, desalojado=None)
     else:
         # Verificar apropiación estricta
         if siguiente is not None and siguiente.restante < en_ejecucion_actual.restante:
-            en_ejecucion_actual.estado = Estado.LISTO
-            siguiente.estado = Estado.EJECUCION
+            en_ejecucion_actual.cambiar_estado(Estado.LISTO)
+            siguiente.cambiar_estado(Estado.EJECUCION)
             return ResultadoPlanificacion(en_ejecucion=siguiente, desalojado=en_ejecucion_actual)
         else:
             return ResultadoPlanificacion(en_ejecucion=en_ejecucion_actual, desalojado=None)
@@ -86,7 +86,7 @@ class Gantt:
                 resultado.append(Tramo(desde=inicio, hasta=i, proceso_id=actual))
                 inicio = i
                 actual = self.ticks[i]
-        
+
         resultado.append(Tramo(desde=inicio, hasta=len(self.ticks), proceso_id=actual))
         return resultado
 
@@ -96,18 +96,12 @@ class Gantt:
         if not tramos_lista:
             return ""
 
-        bloques = []
-        tiempos = [0]
-        
+        fila_bloques = "|"
+        fila_tiempos = "0"
         for tramo in tramos_lista:
             nombre = f"P{tramo.proceso_id}" if tramo.proceso_id is not None else "--"
-            bloques.append(nombre)
-            tiempos.append(tramo.hasta)
-
-        fila_bloques = " | " + " | ".join(bloques) + " |"
-        
-        fila_tiempos = ""
-        for t in tiempos:
-            fila_tiempos += f"{t:<5}"
+            fila_bloques += f" {nombre} |"
+            # cada tiempo queda justo debajo de la barra donde termina su tramo
+            fila_tiempos += str(tramo.hasta).rjust(len(fila_bloques) - len(fila_tiempos))
 
         return f"{fila_bloques}\n{fila_tiempos}"
