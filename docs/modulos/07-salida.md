@@ -26,7 +26,7 @@ Esperando cupo:   —
 ```
 
 ## Informe final
-Por proceso: TR y TE. Además, los promedios y el **rendimiento** (*throughput*) = procesos terminados / tiempo total.
+Por proceso: TR y TE, contados desde el ingreso a la cola de Listos (criterio de la cátedra). Además, los promedios y el **rendimiento** (*throughput*) = procesos terminados / tiempo total.
 
 ## Por qué se hizo así
 - **Las funciones devuelven texto y no hacen `print`**: así se pueden testear, y después se reemplaza la consola por la interfaz con los estilos sin tocar la lógica.

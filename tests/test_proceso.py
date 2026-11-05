@@ -45,9 +45,10 @@ class TestProceso(unittest.TestCase):
         p = Proceso(3, 300, 2, 3)
         self.assertIsNone(p.tiempo_retorno)
         self.assertIsNone(p.tiempo_espera)
+        p.ingreso_listo = 5   # llegó en t=2, pero entró a Listos en t=5: se cuenta desde ahí
         p.fin = 11
-        self.assertEqual(p.tiempo_retorno, 9)
-        self.assertEqual(p.tiempo_espera, 6)
+        self.assertEqual(p.tiempo_retorno, 6)
+        self.assertEqual(p.tiempo_espera, 3)
 
 
 if __name__ == '__main__':

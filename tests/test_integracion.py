@@ -59,6 +59,28 @@ class TestIntegracion(unittest.TestCase):
         self.assertEqual(t1.cpu['id'], 2)
         self.assertEqual(t1.eventos.desalojado, 1)
 
+    def test_tr_y_te_se_cuentan_desde_el_ingreso_a_listos(self):
+        procesos = ejemplo()
+        correr(procesos)
+        # P3 llegó en t=2 pero estuvo Listo/Suspendido hasta t=8; ese tiempo no cuenta
+        self.assertEqual([p.ingreso_listo for p in procesos], [0, 1, 8, 3])
+        self.assertEqual([p.tiempo_retorno for p in procesos], [8, 2, 3, 1])
+        self.assertEqual([p.tiempo_espera for p in procesos], [3, 0, 0, 0])
+
+    def test_desalojado_conserva_su_primer_ingreso_a_listos(self):
+        procesos = ejemplo()
+        correr(procesos)
+        # P1 volvió a Listos por apropiación en t=1, pero su referencia sigue siendo t=0
+        self.assertEqual(procesos[0].ingreso_listo, 0)
+        self.assertEqual(procesos[0].tiempo_espera, 3)
+
+    def test_el_que_espero_cupo_cuenta_desde_que_entro_a_listos(self):
+        procesos = [crear(i, 20, 0, 2) for i in range(1, 8)]
+        correr(procesos)
+        self.assertEqual([p.ingreso_listo for p in procesos], [0, 0, 0, 0, 0, 2, 4])
+        self.assertEqual(procesos[6].tiempo_retorno, 10)
+        self.assertEqual(procesos[6].tiempo_espera, 8)
+
     def test_cpu_ociosa_hasta_el_primer_arribo(self):
         procesos = [crear(1, 100, 3, 2)]
         sim, _ = correr(procesos)

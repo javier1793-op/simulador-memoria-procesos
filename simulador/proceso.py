@@ -36,6 +36,7 @@ class Proceso:
         self.restante = irrupcion     # lo que le falta ejecutar (SRTF ordena por esto)
         self.estado = Estado.NUEVO
         self.particion_id = None      # id de la partición asignada (None si no está en memoria)
+        self.ingreso_listo = None     # primer instante en que entró a Listo (lo registra el motor)
         self.fin = None               # instante en que terminó
 
     def cambiar_estado(self, nuevo: Estado) -> None:
@@ -47,10 +48,11 @@ class Proceso:
 
     @property
     def tiempo_retorno(self):
-        """TR = fin - arribo. Devolver None si todavía no terminó."""
+        """TR = fin - ingreso_listo (criterio de la cátedra: se cuenta desde la cola de Listos,
+        no desde Nuevos ni desde Listos/Suspendidos). Devolver None si todavía no terminó."""
         if self.fin is None:
             return None
-        return self.fin - self.arribo
+        return self.fin - self.ingreso_listo
 
     @property
     def tiempo_espera(self):
