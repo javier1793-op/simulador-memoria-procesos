@@ -1,3 +1,7 @@
+"""RESPONSABLE: Miembro 5
+
+Planificador de largo plazo (admisión de Nuevos) y de mediano plazo (Listo/Suspendido -> Listo).
+"""
 from typing import NamedTuple
 
 from simulador.config import GRADO_MULTIPROGRAMACION
@@ -23,14 +27,12 @@ def promover_suspendidos(procesos: list[Proceso], memoria) -> list[Proceso]:
     promovidos = []
     suspendidos = [p for p in procesos if p.estado == Estado.LISTO_SUSPENDIDO]
     suspendidos.sort(key=lambda p: (p.arribo, p.id))
-    
+
     for p in suspendidos:
         if memoria.asignar(p):
-            p.estado = Estado.LISTO
+            p.cambiar_estado(Estado.LISTO)
             promovidos.append(p)
-        else:
-            pass
-            
+
     return promovidos
 
 
@@ -44,20 +46,20 @@ def admitir_nuevos(procesos: list[Proceso], memoria, t: int) -> ResultadoAdmisio
     admitidos = []
     suspendidos = []
     en_espera = []
-    
+
     nuevos = [p for p in procesos if p.estado == Estado.NUEVO and p.arribo <= t]
     nuevos.sort(key=lambda p: (p.arribo, p.id))
-    
+
     for p in nuevos:
         if contar_en_sistema(procesos) >= GRADO_MULTIPROGRAMACION:
             en_espera.append(p)
-            continue 
-            
+            continue
+
         if memoria.asignar(p):
-            p.estado = Estado.LISTO
+            p.cambiar_estado(Estado.LISTO)
             admitidos.append(p)
         else:
-            p.estado = Estado.LISTO_SUSPENDIDO
+            p.cambiar_estado(Estado.LISTO_SUSPENDIDO)
             suspendidos.append(p)
-            
+
     return ResultadoAdmision(admitidos, suspendidos, en_espera)
