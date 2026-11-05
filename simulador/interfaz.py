@@ -339,14 +339,15 @@ class App:
     def dibujar_informe(self, x1, y1, x2, y2):
         c, est = self.lienzo, self.estadisticas
         c.tarjeta(x1, y1, x2, y2, 'informe final', VERDE, brilla=True)
-        columnas = [('PROCESO', 0), ('ARRIBO', 110), ('IRRUPCIÓN', 210), ('FIN', 330), ('TR', 420), ('TE', 500)]
+        columnas = [('PROCESO', 0), ('ARRIBO', 90), ('ING. LISTOS', 170), ('IRRUPCIÓN', 290), ('FIN', 390),
+                    ('TR', 460), ('TE', 530)]
         ty = y1 + 54
         for nombre, dx in columnas:
             c.create_text(x1 + 28 + dx, ty, text=nombre, anchor='w', fill=TENUE, font=MONO_CHICO)
         c.create_line(x1 + 20, ty + 12, x2 - 20, ty + 12, fill=BORDE)
         for i, f in enumerate(est.por_proceso):
             y = ty + 32 + i * 24
-            valores = [f"P{f['id']}", f['arribo'], f['irrupcion'], f['fin'], f['tr'], f['te']]
+            valores = [f"P{f['id']}", f['arribo'], f['ingreso_listo'], f['irrupcion'], f['fin'], f['tr'], f['te']]
             for (_, dx), v in zip(columnas, valores):
                 c.create_text(x1 + 28 + dx, y, text=str(v), anchor='w',
                               fill=color_de(f['id']) if dx == 0 else TEXTO, font=MONO)
@@ -362,7 +363,7 @@ class App:
             c.rect_redondeado(bx, y, bx + ancho, y + 88, fill=mezclar(col, TARJETA, 0.9), outline=mezclar(col, BORDE, 0.4))
             c.create_text(bx + 16, y + 20, text=nombre, anchor='w', fill=TENUE, font=MONO_CHICO)
             c.texto_neon(bx + 16, y + 34, valor, col, ('Segoe UI', 22, 'bold'))
-        c.create_text(x2 - 24, y - 14, text='rendimiento = procesos terminados / tiempo total',
+        c.create_text(x2 - 24, y - 14, text='TR y TE desde el ingreso a Listos · rendimiento = terminados / tiempo total',
                       anchor='e', fill=TENUE, font=MONO_CHICO)
 
     def dibujar_gantt(self, x1, y1, x2, y2):

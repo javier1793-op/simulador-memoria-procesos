@@ -28,6 +28,8 @@ Llega un proceso ─► ¿hay cupo (< 5)? ─No─► sigue en Nuevo (se reinten
 - **Orden por arribo**: es FIFO, lo más justo. El orden en el que vienen las filas del archivo no tiene que influir.
 - **No bloquear la cola de suspendidos**: si el primero (300K) no entra pero el segundo (100K) sí, se sube el segundo. Así se aprovecha mejor la memoria. Es una **decisión de diseño** que hay que saber defender (la alternativa FIFO estricta es más justa, pero desperdicia memoria).
 
+**Política de selección definida:** se recorren los Listos/Suspendidos por orden de arribo (empate: id) y se suben con Best-Fit todos los que entren; el que no entra se saltea y conserva su lugar. Después, si hay cupo, se reconsideran los Nuevos con `arribo <= t`. Ver la fundamentación en `docs/diagrama-corregido.md`.
+
 ## Cómo lo implementé
 > *(completar)*
 

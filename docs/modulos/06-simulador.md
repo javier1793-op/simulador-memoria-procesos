@@ -39,13 +39,15 @@ en el instante t:
 | 8 | Termina P1 → todo libre (450) → P3 sube a Listo | P3[100-399], libre 150 | P3 |
 | 11 | Termina P3. Fin | todo libre | — |
 
-| Proceso | Fin | TR = fin − arribo | TE = TR − irrupción |
-|---|---|---|---|
-| P1 | 8 | 8 | 3 |
-| P2 | 3 | 2 | 0 |
-| P3 | 11 | 9 | 6 |
-| P4 | 4 | 1 | 0 |
-| **Promedio** | | **5,00** | **2,25** |
+| Proceso | Ingreso a Listos | Fin | TR = fin − ingreso | TE = TR − irrupción |
+|---|---|---|---|---|
+| P1 | 0 | 8 | 8 | 3 |
+| P2 | 1 | 3 | 2 | 0 |
+| P3 | 8 | 11 | 3 | 0 |
+| P4 | 3 | 4 | 1 | 0 |
+| **Promedio** | | | **3,50** | **0,75** |
+
+**Criterio de la cátedra:** TR y TE se cuentan desde que el proceso entra a la cola de **Listos**, no desde su llegada a Nuevos ni a Listos/Suspendidos. Por eso P3, que llegó en t=2, cuenta desde t=8. Si un desalojo lo devuelve a Listos, se conserva el **primer** ingreso: la espera posterior sí cuenta (P1 esperó 3).
 
 Rendimiento = 4 procesos / 11 unidades = **0,36 procesos por unidad de tiempo**.
 
@@ -63,6 +65,7 @@ Rendimiento = 4 procesos / 11 unidades = **0,36 procesos por unidad de tiempo**.
   - los Nuevos, solo si ya llegaron (`arribo <= t`) y esperan cupo.
 - **`finalizada`** es `True` cuando **todos** los procesos están Terminados.
 - **El motor no imprime nada.** `main.py` hace el bucle, muestra la foto y espera Enter en cada evento; al final muestra el último instante, el Gantt y el informe.
+- **`ingreso_listo`:** después de promover y admitir, el motor anota `t` en los procesos Listos que todavía no lo tienen. Lo hace acá porque es el módulo que conoce el reloj, y así no cambia ninguna función de M5.
 - **Verificación:** con todos los módulos completos pasan los 53 tests. Con `datos/procesos-ejemplo.csv` da fin = 8, 3, 11 y 4; Gantt `P1 | P2 P2 | P4 | P1×4 | P3×3`; eventos en t = 0, 1, 2, 3, 4, 8 y 11.
 
 ## Para exponer (2-3 min, es la demo principal)

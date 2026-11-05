@@ -24,7 +24,7 @@ No existe *Bloqueado*: la consigna lo deja afuera para simplificar (no hay E/S).
 - **TR y TE como getters**: se calculan a partir de datos que ya existen, así nunca quedan desactualizados.
 
 ## Fórmulas
-- **Tiempo de retorno** `TR = fin − arribo` → cuánto tardó desde que llegó hasta que terminó.
+- **Tiempo de retorno** `TR = fin − ingreso a Listos` → cuánto tardó desde que entró **por primera vez** a la cola de Listos hasta que terminó.
 - **Tiempo de espera** `TE = TR − irrupción` → cuánto de ese tiempo estuvo esperando (sin usar CPU).
 
 ## Casos de prueba a mano (tarea clave)
@@ -33,7 +33,7 @@ Los casos calculados a mano son la **prueba de que el simulador funciona bien**,
 ## Cómo lo implementé
 Para el desarrollo del **Módulo 2**, se completó la estructura de la clase "Proceso" siguiendo las especificaciones del TPI:
 1. **Control de Cambio de Estado:** Se utilizó el diccionario "TRANSICIONES" dado por la cátedra en "cambiar_estado". Se programó una validación estricta para asegurar que el nuevo estado sea un destino válido desde el estado actual según el diagrama de estados. En caso de una transición prohibida, el sistema lanza, de inmediato, "ValueError".
-2. **Cálculo del Tiempo de Retorno (TR):** Se implementó "tiempo_retorno" aplicando la fórmula matemática TR = fin - arribo. Se incluyó un control clave que retorne "None" en el caso de que el proceso no haya finalizado aún (es decir, si "self.fin" es "None").
+2. **Cálculo del Tiempo de Retorno (TR):** Se implementó "tiempo_retorno" aplicando la fórmula matemática TR = fin - ingreso a Listos (criterio de la cátedra; `ingreso_listo` lo registra el motor). Se incluyó un control clave que retorne "None" en el caso de que el proceso no haya finalizado aún (es decir, si "self.fin" es "None").
 3. **Cálculo del Tiempo de Espera (TE):** Se desarrolló "tiempo_espera" el cual realiza cálculos mediante la diferencia entre el tiempo de retorno y el tiempo de irrupción (TE = TR - irrupcion). Al igual que el TR, si el proceso no concluyó su ciclo de vida, devuelve un valor "None".
 
 ## Para exponer (1-2 min)

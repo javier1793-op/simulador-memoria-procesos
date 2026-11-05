@@ -64,6 +64,10 @@ class Simulador:
         # 1 y 2: primero los suspendidos (ya ocupan cupo y llegaron antes), después los nuevos
         promover_suspendidos(self.procesos, self.memoria)
         admitir_nuevos(self.procesos, self.memoria, self.t)
+        # TR y TE se cuentan desde la PRIMERA entrada a Listos: volver por un desalojo no la cambia
+        for p in self.procesos:
+            if p.estado == Estado.LISTO and p.ingreso_listo is None:
+                p.ingreso_listo = self.t
         arribos = [p.id for p in self.procesos if p.arribo == self.t]
 
         # 3: corto plazo

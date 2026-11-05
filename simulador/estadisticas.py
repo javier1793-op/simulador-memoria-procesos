@@ -6,7 +6,7 @@ from simulador.proceso import Proceso, Estado
 
 @dataclass
 class Estadisticas:
-    por_proceso: list[dict]   # {id, arribo, irrupcion, fin, tr, te}
+    por_proceso: list[dict]   # {id, arribo, ingreso_listo, irrupcion, fin, tr, te}
     promedio_tr: float
     promedio_te: float
     rendimiento: float        # procesos terminados / tiempo total (trabajos por unidad de tiempo)
@@ -24,6 +24,7 @@ def calcular_estadisticas(procesos: list[Proceso], tiempo_total: int) -> Estadis
         por_proceso.append({
             "id": p.id,
             "arribo": p.arribo,
+            "ingreso_listo": p.ingreso_listo,
             "irrupcion": p.irrupcion,
             "fin": p.fin,
             "tr": p.tiempo_retorno,

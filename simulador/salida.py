@@ -68,21 +68,22 @@ def render_instante(inst: Instantanea) -> str:
 
 
 def render_informe(est: Estadisticas) -> str:
-    """Informe final: tabla por proceso (Id, Arribo, Irrupción, Fin, TR, TE),
+    """Informe final: tabla por proceso (Id, Arribo, Ingreso a Listos, Irrupción, Fin, TR, TE),
     promedios con 2 decimales y rendimiento."""
     lineas = ['══════════ INFORME FINAL ══════════', '']
     lineas.append(
-        f"{'Id':>4} │ {'Arribo':>6} │ {'Irrupción':>9} │ {'Fin':>4} │ {'TR':>4} │ {'TE':>4}"
+        f"{'Id':>4} │ {'Arribo':>6} │ {'Ing.Listos':>10} │ {'Irrupción':>9} │ {'Fin':>4} │ {'TR':>4} │ {'TE':>4}"
     )
-    lineas.append('─────┼────────┼───────────┼──────┼──────┼──────')
+    lineas.append('─────┼────────┼────────────┼───────────┼──────┼──────┼──────')
 
     for f in est.por_proceso:
         lineas.append(
-            f"{'P' + str(f['id']):>4} │ {f['arribo']:>6} │ {f['irrupcion']:>9} │ "
+            f"{'P' + str(f['id']):>4} │ {f['arribo']:>6} │ {f['ingreso_listo']:>10} │ {f['irrupcion']:>9} │ "
             f"{f['fin']:>4} │ {f['tr']:>4} │ {f['te']:>4}"
         )
 
     lineas.append('')
+    lineas.append('TR y TE se cuentan desde el ingreso a la cola de Listos.')
     lineas.append(f'Promedio TR: {est.promedio_tr:.2f}')
     lineas.append(f'Promedio TE: {est.promedio_te:.2f}')
     lineas.append(f'Rendimiento: {est.rendimiento:.2f} procesos por unidad de tiempo')
