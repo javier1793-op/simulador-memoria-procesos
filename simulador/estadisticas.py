@@ -13,6 +13,7 @@ class Estadisticas:
 
 
 def calcular_estadisticas(procesos: list[Proceso], tiempo_total: int) -> Estadisticas:
+    """procesos: todos Terminados. tiempo_total: instante en que terminó el último."""
     terminados = [p for p in procesos if p.estado == Estado.TERMINADO]
 
     por_proceso = []
