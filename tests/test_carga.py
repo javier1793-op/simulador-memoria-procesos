@@ -46,6 +46,17 @@ class TestValidar(unittest.TestCase):
     def test_tamano_cero(self):
         self.assertTrue(validar_procesos([fila(1, 0)]))
 
+    def test_rechaza_tipos_no_enteros_y_acumula_errores(self):
+        for valor in (1.5, '2', None, True, [], {}):
+            with self.subTest(valor=valor):
+                errores = validar_procesos([fila(valor, valor, valor, valor), fila(2, 451)])
+                self.assertEqual(len(errores), 5)
+                self.assertTrue(all('entero' in error for error in errores[:4]))
+
+    def test_acepta_limites_inclusivos(self):
+        procesos = [fila(i, 450 if i == 10 else 1, 0, 1) for i in range(1, 11)]
+        self.assertEqual(validar_procesos(procesos), [])
+
 
 class TestCargarArchivo(unittest.TestCase):
     def test_devuelve_procesos(self):

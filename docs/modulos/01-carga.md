@@ -29,7 +29,14 @@ id,tamano,arribo,irrupcion
 | irrupción ≥ 1 | Un proceso sin tiempo de CPU no tiene sentido |
 
 ## Cómo lo implementé
-> *(completar al terminar: decisiones, problemas que aparecieron y cómo se resolvieron)*
+- `parsear_csv` usa `splitlines()` para admitir finales de línea de Windows, ignora líneas vacías y quita espacios. La primera línea no vacía se toma como encabezado. Cada fila debe tener cuatro columnas convertibles a enteros; ante un error de formato se lanza `ErrorCarga` con el número de línea física.
+- `validar_procesos` recibe los diccionarios parseados y acumula los errores de cantidad, IDs, tamaño, arribo e irrupción. Una lista vacía genera `No se ingresaron procesos.`. Los errores de formato del parseo detienen la carga en la primera fila incorrecta; la acumulación corresponde a la validación posterior.
+- `cargar_archivo` lee UTF-8, parsea y valida antes de crear objetos `Proceso`. Si hay errores de validación, los une con saltos de línea y lanza `ErrorCarga`; `main.py` muestra ese mensaje y termina con código 1. Una carga inválida no se convierte en una lista vacía.
+- `carga_manual` vuelve a pedir cada dato inválido y asigna IDs secuenciales desde 1. No implementa el guardado opcional a CSV.
+
+- `validar_procesos` comprueba que cada dato sea realmente un entero: un decimal, un texto, un booleano o un campo ausente se informan como error, sin cortar la validación.
+
+**Verificación:** pasan los 13 tests de M1 (los 11 originales y 2 nuevos, sobre tipos inválidos y valores límite). Los archivos `datos/error-tamano.csv` y `datos/error-varios.csv` muestran los mensajes de error en la demo.
 
 ## Para exponer (1-2 min)
 1. Mostrar el CSV de ejemplo y explicar cada columna.
