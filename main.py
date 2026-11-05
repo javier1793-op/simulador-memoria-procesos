@@ -12,6 +12,8 @@ from simulador.salida import render_informe, render_instante
 
 
 def main() -> int:
+    # Sin esto, al redirigir la salida a un archivo Windows no puede escribir las tablas
+    sys.stdout.reconfigure(encoding="utf-8")
     try:
         procesos = cargar_archivo(sys.argv[1]) if len(sys.argv) > 1 else carga_manual()
     except (ErrorCarga, OSError) as e:
