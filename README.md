@@ -2,6 +2,20 @@
 
 TPI de Sistemas Operativos — UTN FRRe — 2026
 
+## Grupo 6
+
+**Integrantes:**
+
+- Acuña Fernandez, Maria Eva
+- Colman, Fiorella Soledad
+- Ortiz, Sofia Rut
+- Pérez Gudiño, Ignacio
+- Ruiz Díaz, Javier Alejandro
+- Vaernet, Bianca Estefania
+- Vaz, Maria Luna
+
+## El simulador
+
 - **Memoria:** particiones variables (MVT), 100K para el SO + 450K para usuarios, política **Best-Fit**
 - **CPU:** un solo procesador, **SRTF** (apropiativo)
 - **Grado de multiprogramación:** máximo 5 (Ejecución + Listo + Listo/Suspendido)
