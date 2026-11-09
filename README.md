@@ -14,6 +14,8 @@ TPI de Sistemas Operativos — UTN FRRe — 2026
 - Vaernet, Bianca Estefania
 - Vaz, Maria Luna
 
+## El simulador
+
 - **Memoria:** particiones variables (MVT), 100K para el SO + 450K para usuarios, política **Best-Fit**
 - **CPU:** un solo procesador, **SRTF** (apropiativo)
 - **Grado de multiprogramación:** máximo 5 (Ejecución + Listo + Listo/Suspendido)
