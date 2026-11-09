@@ -35,10 +35,15 @@ Máximo 10 procesos. El tamaño se expresa en K y no puede superar 450. Si el ar
 El tiempo se cuenta desde que el proceso entra a la cola de Listos, no desde que llega al sistema. Un proceso que espera en Listo/Suspendido por falta de memoria todavía no cuenta ese tiempo.
 
 ## Si Windows bloquea el programa
-Los `.exe` no están firmados digitalmente, por lo que Windows o el antivirus pueden mostrar un aviso (por ejemplo SmartScreen, o "El Control Inteligente de Aplicaciones bloqueó una aplicación"). Es esperable en software de uso académico y no indica un virus.
-- **SmartScreen:** elegir **Más información → Ejecutar de todas formas**.
-- **Control Inteligente de Aplicaciones (Windows 11):** puede bloquear también el desinstalador (`unins000.exe`). Si pasa, se puede borrar a mano la carpeta de instalación y los accesos del menú Inicio y del escritorio.
-- Alternativa: ejecutar desde el código fuente (ver abajo).
+Los `.exe` no están firmados digitalmente, por lo que Windows puede mostrar avisos al ejecutarlos. No indica un virus: es esperable en software de uso académico.
+
+- **SmartScreen ("Windows protegió su PC"):** aparece al ejecutar `SimuladorSetup.exe` y dice "Editor desconocido". Para continuar:
+  1. Clic en **Más información**.
+  2. Clic en **Ejecutar de todas formas**.
+- **Control Inteligente de Aplicaciones (Windows 11):** en algunas PC puede bloquear el programa o el desinstalador (`unins000.exe`). Si pasa, se puede borrar a mano la carpeta `C:\Users\<usuario>\AppData\Local\Programs\SimuladorSO` y los accesos del menú Inicio y del escritorio.
+- **Alternativa:** ejecutar desde el código fuente (ver abajo).
+
+Probado en una PC con Windows 11 sin Python: la instalación (con el aviso de SmartScreen), la ventana, la consola y la desinstalación funcionaron.
 
 ## Desde el código fuente (para desarrollo)
 Requiere Python 3.10 o superior.
