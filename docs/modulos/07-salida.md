@@ -40,7 +40,7 @@ Por proceso: TR y TE, contados desde el ingreso a la cola de Listos (criterio de
 ## Cómo construir el instalador
 ```
 pip install pyinstaller
-(instalar Inno Setup 6 desde jrsoftware.org)
+(instalar Inno Setup 6 o 7 desde jrsoftware.org)
 instalador\construir.bat      →  instalador\salida\SimuladorSetup.exe
 ```
 **Importante:** probarlo en una PC que **no** tenga Python instalado antes de entregarlo. El antivirus a veces marca los `.exe` de PyInstaller: si pasa, hay que anotarlo en el HOWTO.
@@ -48,7 +48,19 @@ instalador\construir.bat      →  instalador\salida\SimuladorSetup.exe
 El HOWTO para el profe está en `HOWTO.md`, en la raíz del proyecto.
 
 ## Cómo lo implementé
-> *(completar)*
+**Estadísticas (`estadisticas.py`).** `calcular_estadisticas` recibe la lista de procesos y el tiempo total. Se queda solo con los procesos en estado Terminado, arma una fila por proceso (id, arribo, irrupción, fin, TR y TE) y calcula los promedios y el rendimiento (terminados / tiempo total). Si no hay procesos terminados o el tiempo total es 0, devuelve 0.0 en vez de dividir por cero. El redondeo a 2 decimales no se hace acá sino al mostrar, para no perder precisión.
+
+**Pantallas (`salida.py`).** `render_instante` y `render_informe` solo devuelven texto, sin `print`. Cada evento muestra el encabezado con `t` y lo que ocurrió (llegada, terminación, desalojo), la CPU ("ociosa" si no hay proceso), la tabla de particiones con la fila del SO y las colas de Listos, Listos/Suspendidos y Nuevos esperando cupo. El informe muestra la tabla por proceso, los promedios con 2 decimales y el rendimiento.
+
+**Instalador (`instalador/`).** Se genera con `construir.bat`: PyInstaller empaqueta el simulador en `.exe` (versión con ventana y versión de consola) e Inno Setup arma `SimuladorSetup.exe`, que instala en la carpeta del usuario sin pedir permisos de administrador.
+
+**Problemas que aparecieron y cómo se resolvieron**
+- *El comando `pyinstaller` no se reconocía* (el script de PyInstaller no estaba en el PATH). Se usa `python -m PyInstaller`, que anda siempre.
+- *Inno Setup 7 se instala en otra ruta que la versión 6*, y el `.bat` no lo encontraba. Se agregó la búsqueda de la ruta de la 7 (hoy el `.bat` prueba la 7 y después la 6).
+- *SmartScreen bloquea el instalador* porque los `.exe` no están firmados. Se pasa con "Más información → Ejecutar de todas formas" y quedó escrito en el HOWTO.
+- *En una PC con Windows 11 el Control Inteligente de Aplicaciones bloqueó el desinstalador.* En otra PC se desinstaló sin problemas. Se documentó en el HOWTO como algo que puede pasar.
+
+**Pruebas.** Los tests de `tests/test_salida.py` pasan. El instalador se probó en una PC con Windows 11 sin Python: instala, abre la ventana, anda la consola (ejemplo y carga manual) y desinstala bien.
 
 ## Para exponer (1-2 min)
 1. Recorrer una pantalla de evento explicando cada parte.
